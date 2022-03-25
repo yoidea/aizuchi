@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aizuchi</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  </head>
+  <body>
+    <progress class="progress is-success" id="progress" value="0" max="0"></progress>
+    <div class="block has-text-centered">
+      <h1 class="title is-1 has-text-danger" id="message"></h1>
+      <figure class="image">
+        <img src="./img/woman.png">
+      </figure>
+    </div>
+    <script src="./js/audioManager.js"></script>
+    <script>
+      const DETECTION_GAIN = 10000;
+      const DETECTION_INTERVAL = 5000;
+      const aizuchiSet = [
+        { file: new Audio("./se/01.mp3"), word: "はい！" },
+        { file: new Audio("./se/02.mp3"), word: "おおー" },
+        { file: new Audio("./se/03.mp3"), word: "へー" },
+        { file: new Audio("./se/04.mp3"), word: "ん？" }
+      ];
+      window.onload = function() {
+        const state = { talking: false, played: false };
+        const audioManager = new AudioManager({
+          fps: 5,
+          useMicrophone : true,
+          onEnterFrame : function() {
+            const gain = Utils.sum(this.analysers.mic.getByteFrequencyData());
+            // console.log(gain);
+            document.querySelector("#progress").value = gain;
+            document.querySelector("#progress").max = DETECTION_GAIN;
+            if (gain < DETECTION_GAIN) {
+              if (state.talking && !state.played) {
+                aizuchi = aizuchiSet[Math.floor(Math.random()*aizuchiSet.length)]
+                aizuchi.file.play();
+                state.played = true;
+                document.querySelector("#message").innerText = aizuchi.word;
+                setTimeout(() => {
+                  state.played = false;
+                  document.querySelector("#message").innerText = null;
+                }, DETECTION_INTERVAL);
+              }
+              state.talking = false;
+            } else {
+              state.talking = true;
+            }
+          }
+        }).init();
+      };
+    </script>
+  </body>
+</html>
