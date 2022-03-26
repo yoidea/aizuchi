@@ -9,7 +9,24 @@
   <body>
     <div class="container">
       <div class="notification">
-        <progress class="progress is-success" id="progress" value="0" max="0"></progress>
+        <progress class="progress is-danger" id="progress" value="0" max="0"></progress>
+        <div class="columns">
+          <div class="column block has-text-centered">
+            <h1 class="title is-2" id="talking">会話未検出</h1>
+          </div>
+          <div class="column block has-text-centered">
+            <div class="control">
+              <label class="label">検出感度</label>
+              <div class="select">
+                <select id="select">
+                  <option value="7500">高</option>
+                  <option value="10000" selected>標準</option>
+                  <option value="15000">低</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="block has-text-centered">
         <h1 class="title is-1 has-text-danger" id="message"></h1>

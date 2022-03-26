@@ -1,5 +1,3 @@
-// 検出感度
-const DETECTION_GAIN = 10000;
 // 検出頻度
 const DETECTION_INTERVAL = 5;
 // 相槌頻度
@@ -18,10 +16,18 @@ const state = new Proxy(
     gain: 0,
     detectionGain: 0,
     prevGain: 0,
+    talking: false,
     aizuhing: false,
     message: null
   },
   {
+    get: (obj, prop) => {
+      if (prop === 'detectionGain') {
+        obj.detectionGain = document.querySelector("#select").value;
+        document.querySelector("#progress").max = obj[prop];
+      }
+      return obj[prop];
+    },
     set: (obj, prop, value) => {
       if (prop === 'gain') {
         obj.prevGain = obj.gain;
@@ -33,6 +39,10 @@ const state = new Proxy(
       if (prop === 'message') {
         document.querySelector("#message").innerText = value;
       }
+      if (prop === 'talking') {
+        const text = value ? "会話検出中" : "会話未検出";
+        document.querySelector("#talking").innerText = text;
+      }
       obj[prop] = value;
       return true;
     }
@@ -40,8 +50,8 @@ const state = new Proxy(
 );
 
 const enterFrame = (mic) => {
-  state.detectionGain = DETECTION_GAIN;
   state.gain = Utils.sum(mic.getByteFrequencyData());
+  state.talking = state.gain > state.detectionGain;
   if (state.aizuhing) return;
   // 直前に検出して今回検出していなければ相槌を打つ
   if ((state.gain < state.detectionGain)
