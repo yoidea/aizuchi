@@ -7,7 +7,9 @@ const aizuchies = [
   { file: new Audio("./se/01.mp3"), word: "はい！" },
   { file: new Audio("./se/02.mp3"), word: "おおー" },
   { file: new Audio("./se/03.mp3"), word: "へー" },
-  { file: new Audio("./se/04.mp3"), word: "ん？" }
+  { file: new Audio("./se/04.mp3"), word: "ん？" },
+  { file: new Audio("./se/05.mp3"), word: "あはは" },
+  { file: new Audio("./se/06.mp3"), word: "ギャーーー" }
 ];
 
 // DOMと結合
